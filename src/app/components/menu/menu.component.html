@@ -1,0 +1,21 @@
+<ng-container *ngIf="(asyncTabs | async) === null">
+    Loading...
+</ng-container>
+
+<mat-tab-group mat-align-tabs="center">
+    <mat-tab *ngFor="let tab of asyncTabs | async">
+        <ng-template mat-tab-label>{{tab.label}}</ng-template>
+        <mat-grid-list cols="4" rowHeight="2:1">
+            <div *ngFor="let item of tab.content">
+                <mat-grid-tile>
+                    <button mat-button [matTooltip]="getTooltip(item)" matTooltipPosition="right"
+                        (click)="handleMenuClick(tab.label, item)">
+                        •
+                    </button>
+                </mat-grid-tile>
+            </div>
+        </mat-grid-list>
+
+
+    </mat-tab>
+</mat-tab-group>
