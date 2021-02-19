@@ -1,7 +1,13 @@
-<p>main works!</p>
-<div *ngFor="let row of board">
-    <div *ngFor="let item of row">
-        {{item}}
-    </div>
-    <hr>
+<div>
+    <mat-grid-list [cols]="cols" rowHeight="2:1">
+        <div *ngFor="let row of board">
+            <div *ngFor="let item of row">
+                <mat-grid-tile>
+                    <button mat-button [matTooltip]="getTooltip(item)" (click)="handleClick(item)">
+                        •
+                    </button>
+                </mat-grid-tile>
+            </div>
+        </div>
+    </mat-grid-list>
 </div>

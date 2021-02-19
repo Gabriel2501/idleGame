@@ -1,3 +1,6 @@
+import { IShopItem } from './../../core/interfaces/shopItem';
+import { MenuService } from 'src/app/core/services/menu.service';
+import { IBoardSquare } from './../../core/interfaces/boardSquare';
 import { PlayerStatsService } from './../../core/services/player-stats.service';
 import { Component, OnInit } from '@angular/core';
 
@@ -8,19 +11,26 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainComponent implements OnInit {
 
-  private _rows: number;
-  private _cols: number;
+  public rows: number;
+  public cols: number;
 
-  public board: any[][];
-  constructor(private _playerStats: PlayerStatsService) {
-    this._rows = this._playerStats.getRows();
-    this._cols = this._playerStats.getCols();
-    this.board = Array<any>();
+  public board: Array<Array<IBoardSquare>>;
 
-    for (let i = 0; i < this._rows; i++) {
+  constructor(
+    private _playerStats: PlayerStatsService,
+    private _menuService: MenuService
+  ) {
+    this.rows = this._playerStats.getRows();
+    this.cols = this._playerStats.getCols();
+    this.board = Array<Array<IBoardSquare>>();
+
+    for (let i = 0; i < this.rows; i++) {
       this.board[i] = [];
-      for (let j = 0; j < this._cols; j++) {
-        this.board[i][j] = "a";
+
+      for (let j = 0; j < this.cols; j++) {
+        let square: IBoardSquare = { isEmpty: true, positionX: i, positionY: j };
+
+        this.board[i][j] = square;
       }
     }
   }
@@ -29,4 +39,23 @@ export class MainComponent implements OnInit {
 
   }
 
+  handleClick(item: IBoardSquare) {
+    item.item = this._menuService.getSelectedShopItem();
+    item.isEmpty = false;
+
+    console.log(item.item);
+  }
+
+  getTooltip(item: IBoardSquare) {
+    return (item.isEmpty) ? "" : this.generateToolTip(item.item);
+  }
+
+  generateToolTip(item: IShopItem | undefined) {
+    return item ?
+      `
+      ${item.name}
+      ${item.description}
+      `
+      : "Error";
+  }
 }

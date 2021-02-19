@@ -1,5 +1,10 @@
-import { IShopItem } from './IShopItem';
+import { IUpgradeItem } from './upgradeItem';
+import { IShopItem } from './shopItem';
+import { IResetItem } from './ResetItem';
+
 export interface ITab {
     label: string,
-    content: IShopItem[]
+    contentShop?: IShopItem[],
+    contentUpgrade?: IUpgradeItem[],
+    contentReset?: IResetItem[]
 }

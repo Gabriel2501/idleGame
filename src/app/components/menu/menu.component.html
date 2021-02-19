@@ -1,21 +1,67 @@
-<ng-container *ngIf="(asyncTabs | async) === null">
-    Loading...
-</ng-container>
+<div style="height: 35%;">
+    <ng-container *ngIf="(asyncStats | async) === null">
+        Loading...
+    </ng-container>
 
-<mat-tab-group mat-align-tabs="center">
-    <mat-tab *ngFor="let tab of asyncTabs | async">
-        <ng-template mat-tab-label>{{tab.label}}</ng-template>
-        <mat-grid-list cols="4" rowHeight="2:1">
-            <div *ngFor="let item of tab.content">
-                <mat-grid-tile>
-                    <button mat-button [matTooltip]="getTooltip(item)" matTooltipPosition="right"
-                        (click)="handleMenuClick(tab.label, item)">
-                        •
-                    </button>
-                </mat-grid-tile>
-            </div>
-        </mat-grid-list>
+    <mat-list role="list" *ngIf="asyncStats | async as stats">
+        <mat-list-item role="listitem">
+            Balance: ${{stats.balance}}
+        </mat-list-item>
+        <mat-list-item role="listitem">
+            Technology: {{stats.technology}}
+        </mat-list-item>
 
 
-    </mat-tab>
-</mat-tab-group>
+    </mat-list>
+
+</div>
+
+<div style="height: 65%;">
+    <mat-divider></mat-divider>
+    <ng-container *ngIf="(asyncTabs | async) === null">
+        Loading...
+    </ng-container>
+
+    <mat-tab-group mat-align-tabs="center">
+        <mat-tab *ngFor="let tab of asyncTabs | async">
+            <ng-template mat-tab-label>{{tab.label}}</ng-template>
+            <mat-grid-list cols="4" rowHeight="2:1">
+
+                <div *ngIf="tab.contentShop">
+                    <div *ngFor="let item of tab.contentShop">
+                        <mat-grid-tile>
+                            <button [id]="'id' + item.id" class="shopItem" mat-button [matTooltip]="getTooltip(item)" matTooltipPosition="right"
+                                (click)="handleMenuClick(tab.label, item)" [disabled]="!isAffordable(item)">
+                                •
+                            </button>
+                        </mat-grid-tile>
+                    </div>
+                </div>
+
+                <div *ngIf="tab.contentUpgrade">
+                    <div *ngFor="let item of tab.contentUpgrade">
+                        <mat-grid-tile>
+                            <button mat-button [matTooltip]="getTooltip(item)" matTooltipPosition="right"
+                                (click)="handleMenuClick(tab.label, item)" [disabled]="!isAffordable(item)">
+                                •
+                            </button>
+                        </mat-grid-tile>
+                    </div>
+                </div>
+
+                <div *ngIf="tab.contentReset">
+                    <div *ngFor="let item of tab.contentReset">
+                        <mat-grid-tile>
+                            <button mat-button [matTooltip]="getTooltip(item)" matTooltipPosition="right"
+                                (click)="handleMenuClick(tab.label, item)" [disabled]="!isAffordable(item)">
+                                •
+                            </button>
+                        </mat-grid-tile>
+                    </div>
+                </div>
+
+            </mat-grid-list>
+            <mat-divider></mat-divider>
+        </mat-tab>
+    </mat-tab-group>
+</div>
