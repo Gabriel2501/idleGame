@@ -1,3 +1,5 @@
+import { IPlayerStats } from './../../core/interfaces/playerStats';
+import { Observable } from 'rxjs';
 import { IShopItem } from './../../core/interfaces/shopItem';
 import { MenuService } from 'src/app/core/services/menu.service';
 import { IBoardSquare } from './../../core/interfaces/boardSquare';
@@ -11,28 +13,43 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainComponent implements OnInit {
 
-  public rows: number;
-  public cols: number;
+  public size: number;
 
   public board: Array<Array<IBoardSquare>>;
 
+  private asyncStats: Observable<IPlayerStats>;
+
   constructor(
-    private _playerStats: PlayerStatsService,
+    private _playerStatsService: PlayerStatsService,
     private _menuService: MenuService
   ) {
-    this.rows = this._playerStats.getRows();
-    this.cols = this._playerStats.getCols();
+    this.size = this._playerStatsService.getBoardSize();
     this.board = Array<Array<IBoardSquare>>();
 
-    for (let i = 0; i < this.rows; i++) {
+    for (let i = 0; i < this.size; i++) {
       this.board[i] = [];
 
-      for (let j = 0; j < this.cols; j++) {
+      for (let j = 0; j < this.size; j++) {
         let square: IBoardSquare = { isEmpty: true, positionX: i, positionY: j };
 
         this.board[i][j] = square;
       }
     }
+
+    this.asyncStats = _playerStatsService.getPlayerStats();
+    this.asyncStats.subscribe(newPlayerStats => {
+      this.size = newPlayerStats.size;
+      for (let i = 0; i < this.size; i++) {
+        if (!this.board[i]) this.board[i] = [];
+        for (let j = 0; j < this.size; j++) {
+          if (!this.board[i][j]) {
+            let square: IBoardSquare = { isEmpty: true, positionX: i, positionY: j };
+            this.board[i][j] = square;
+          }
+        }
+      }
+    });
+
   }
 
   ngOnInit(): void {
@@ -40,22 +57,64 @@ export class MainComponent implements OnInit {
   }
 
   handleClick(item: IBoardSquare) {
-    item.item = this._menuService.getSelectedShopItem();
-    item.isEmpty = false;
-
-    console.log(item.item);
+    if (!item.item) {
+      if (this._playerStatsService.buyShopItem(this._menuService.getSelectedShopItem())) {
+        item.item = this._menuService.getSelectedShopItem();
+        item.isEmpty = false;
+        this.startLifeCycle(item);
+      }
+    }
   }
 
   getTooltip(item: IBoardSquare) {
     return (item.isEmpty) ? "" : this.generateToolTip(item.item);
   }
 
-  generateToolTip(item: IShopItem | undefined) {
+  generateToolTip(item?: IShopItem) {
     return item ?
       `
       ${item.name}
-      ${item.description}
+      $${item.moneyProduction}/s
+      #${item.heatProduction}/s
       `
       : "Error";
   }
+
+  startLifeCycle(square: IBoardSquare) {
+    let item = square.item ? square.item : undefined;
+    square.remainingTime = item?.duration ? item.duration : 0;
+    document.querySelector(`#board${square.positionX}${square.positionY}`)?.classList.add("activated");
+    square.remainingTimeBarValue = 100;
+    let interval = setInterval(() => {
+      this.progressBarInterval(square);
+      if (square.remainingTime) {
+        square.remainingTime--;
+        square.remainingTimeBarValue = item?.duration ? square.remainingTime / item.duration * 100 : 0;
+        this._playerStatsService.addMoney(item?.moneyProduction);
+      }
+      else {
+        this.endLifeCycle(square);
+        clearInterval(interval);
+      }
+    }, 1000);
+  }
+
+  endLifeCycle(square: IBoardSquare) {
+    document.querySelector(`#board${square.positionX}${square.positionY}`)?.classList.remove("activated");
+    square.isEmpty = true;
+    square.item = undefined;
+  }
+
+  progressBarInterval(square: IBoardSquare) {
+    square.progressBarValue = 0;
+    let progressBarInterval = setInterval(() => {
+      if (square.progressBarValue != undefined) {
+        square.progressBarValue += 10;
+        if (square.progressBarValue > 80) {
+          clearInterval(progressBarInterval);
+        }
+      }
+    }, 100);
+  }
+
 }

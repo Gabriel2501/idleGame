@@ -1,6 +1,6 @@
+import { IResetItem } from './resetItem';
 import { IUpgradeItem } from './upgradeItem';
 import { IShopItem } from './shopItem';
-import { IResetItem } from './ResetItem';
 
 export interface ITab {
     label: string,

@@ -2,6 +2,7 @@ export interface IMenuItem {
     id: number,
     name: string,
     description: string,
-    price: number
+    price: number,
+    disabled?: boolean
     
 }

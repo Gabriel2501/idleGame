@@ -1,5 +1,8 @@
 import { IMenuItem } from './menuItem';
 
 export interface IShopItem extends IMenuItem{
-    heatProduction?: number
+    moneyProduction?: number,
+    heatProduction?: number,
+    maxHeat?: number,
+    duration?: number
 }

@@ -1,5 +1,5 @@
 export interface IPlayerStats {
     balance: number,
-    technology: number
-
+    technology: number,
+    size: number
 }

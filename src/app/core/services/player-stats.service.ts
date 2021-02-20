@@ -1,37 +1,83 @@
 import { IShopItem } from './../interfaces/shopItem';
+import { Subject } from 'rxjs';
+import { IUpgradeItem } from './../interfaces/upgradeItem';
 import { Injectable } from '@angular/core';
+import { IPlayerStats } from '../interfaces/playerStats';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlayerStatsService {
-  private _rows: number;
-  private _cols: number;
 
-  private _maxRows: number;
-  private _maxCols: number;
+  private _maxSize: number;
 
-  private _balance: number;
+  private _playerStats: IPlayerStats;
+  private _playerStats$: Subject<IPlayerStats>;
 
-  private _selectedShopItem!: IShopItem;
+  private _productionMultipliers: any[];
 
   constructor() {
-    this._rows = 5;
-    this._cols = 5;
-    this._maxRows = 16;
-    this._maxCols = 16;
-    this._balance = 120;
+    this._playerStats$ = new Subject();
+
+    this._maxSize = 16;
+
+    this._playerStats = {
+      balance: 10,
+      technology: 0,
+      size: 5
+    };
+
+    this._productionMultipliers = [
+
+    ];
   }
 
-  getRows() {
-    return this._rows;
+  initiateStats() {
+    setTimeout(() => this._playerStats$.next(this._playerStats), 1);
   }
 
-  getCols() {
-    return this._cols;
+  getBoardSize() {
+    return this._playerStats.size;
   }
 
-  getBalance() {
-    return this._balance;
+  getPlayerCurrentStats() {
+    return this._playerStats;
+  }
+
+  getPlayerStats() {
+    return this._playerStats$;
+  }
+
+  buyShopItem(item: IShopItem) {
+    if (this._playerStats.balance >= item.price) {
+      this._playerStats.balance -= item.price;
+      this._playerStats$.next(this._playerStats);
+      return true;
+    }
+    return false;
+  }
+
+  buyUpgrade(item: IUpgradeItem) {
+    if (this._playerStats.balance >= item.price) {
+      this._playerStats.balance -= item.price;
+      this.applyUpgrade(item.effectType, item.effectPower);
+    }
+
+    this._playerStats$.next(this._playerStats);
+  }
+
+  applyUpgrade(type: string, power: number) {
+    switch (type) {
+      case 'addBoardSize':
+        if (this._playerStats.size < this._maxSize) this._playerStats.size += power;
+        break;
+    }
+  }
+
+  addMoney(value: number | undefined) {
+    if (value) {
+      this._playerStats.balance += value;
+      this._playerStats$.next(this._playerStats);
+    }
   }
 }
