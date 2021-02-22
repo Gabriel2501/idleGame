@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'idle-game';
+
+  constructor() {
+    window.oncontextmenu = (ev: MouseEvent) => ev.preventDefault();
+    window.onselectstart = (ev: Event) => ev.preventDefault();
+  }
 }

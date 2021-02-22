@@ -18,8 +18,8 @@ export class MenuService {
     this._tabs = [
       {
         label: 'Shop', contentShop: [
-          { id: 0, name: 'Content 1', description: 'Description 1', price: 10, moneyProduction: 1, heatProduction: 0, duration: 15 },
-          { id: 1, name: 'Content 12', description: 'Description 1', price: 120 },
+          { id: 0, name: 'Solar Panel', description: 'The most environmental-friendly option you can have! Does not produce any heat to the chamber.', price: 10, moneyProduction: 1, heatProduction: 0, duration: 15 },
+          { id: 1, name: 'Uranium Cell', description: 'A single uranium cell. Produces 5$/s but emits 1 heat/s aswell.', price: 100, moneyProduction: 5, heatProduction: 1, duration: 30 },
           { id: 2, name: 'Content 13', description: 'Description 1', price: 130 },
           { id: 3, name: 'Content 14', description: 'Description 1', price: 140 },
 

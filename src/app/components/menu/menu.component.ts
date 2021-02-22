@@ -22,6 +22,7 @@ export class MenuComponent implements OnInit {
     private menuService: MenuService,
     private playerStatsService: PlayerStatsService
   ) {
+
     this.asyncTabs = menuService.getTabList();
     this.asyncStats = playerStatsService.getPlayerStats();
 
@@ -82,6 +83,7 @@ export class MenuComponent implements OnInit {
     contentShop?.forEach(item => {
       item.disabled = this.playerStatsService.getPlayerCurrentStats().balance < item.price;
       if (item.disabled) document.querySelector(`#id${item.id}`)?.classList.remove("selected");
+      else if (this.menuService.getSelectedShopItem() === item) document.querySelector(`#id${item.id}`)?.classList.add("selected");
     });
   }
 }

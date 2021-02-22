@@ -1,3 +1,4 @@
+import { IBoardSquare } from './../interfaces/boardSquare';
 import { IShopItem } from './../interfaces/shopItem';
 import { Subject } from 'rxjs';
 import { IUpgradeItem } from './../interfaces/upgradeItem';
@@ -24,7 +25,9 @@ export class PlayerStatsService {
     this._playerStats = {
       balance: 10,
       technology: 0,
-      size: 5
+      size: 5,
+      currentHeat: 0,
+      maxHeat: 100
     };
 
     this._productionMultipliers = [
@@ -57,6 +60,15 @@ export class PlayerStatsService {
     return false;
   }
 
+  sellShopItem(square: IBoardSquare) {
+    let item = square.item ? square.item : <IShopItem>{};
+    square.remainingTime = square.remainingTime ? square.remainingTime : 1;
+    item.duration = item.duration ? item.duration : 1;
+    this._playerStats.balance += Math.round(item.price * (square.remainingTime / item.duration));
+
+    this._playerStats$.next(this._playerStats);
+  }
+
   buyUpgrade(item: IUpgradeItem) {
     if (this._playerStats.balance >= item.price) {
       this._playerStats.balance -= item.price;
@@ -74,10 +86,30 @@ export class PlayerStatsService {
     }
   }
 
-  addMoney(value: number | undefined) {
+  addMoney(value?: number) {
     if (value) {
       this._playerStats.balance += value;
       this._playerStats$.next(this._playerStats);
+    }
+  }
+
+  addHeat(value?: number) {
+    if (value) {
+      this._playerStats.currentHeat += value;
+      if (this._playerStats.currentHeat >= this._playerStats.maxHeat) {
+        return true;
+      }
+      this._playerStats$.next(this._playerStats);
+    }
+    return false;
+  }
+
+  removeHeat(value?: number) {
+    if (value) {
+      if (this._playerStats.currentHeat - value >= 0) {
+        this._playerStats.currentHeat -= value;
+        this._playerStats$.next(this._playerStats);
+      }
     }
   }
 }

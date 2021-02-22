@@ -5,6 +5,5 @@ export interface IBoardSquare {
     positionY: number,
     item?: IShopItem,
     remainingTime?: number,
-    remainingTimeBarValue?: number,
-    progressBarValue?: number
+    remainingTimeBarValue?: number
 }

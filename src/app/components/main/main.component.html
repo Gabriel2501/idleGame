@@ -1,20 +1,21 @@
-<div>
+<div class="main">
     <mat-grid-list [cols]="size" rowHeight="2:1">
         <div *ngFor="let row of board; let i = index">
             <div *ngFor="let column of row; let j = index">
-                <mat-grid-tile>
-                    <button [id]="'board'+i+j" mat-button [matTooltip]="getTooltip(column)"
-                        (click)="handleClick(column)">
-                        •
-                        <div *ngIf="!board[i][j].isEmpty">
-                            <mat-progress-bar mode="determinate" [value]="board[i][j].progressBarValue">
-
-                            </mat-progress-bar>
-                            <mat-progress-bar mode="determinate" [value]="board[i][j].remainingTimeBarValue">
-
-                            </mat-progress-bar>
+                <mat-grid-tile [id]="'board'+i+j" mat-button [matTooltip]="getTooltip(column)"
+                    (click)="handleClick(column)" (contextmenu)="handleRightClick(column, $event)"
+                    (mouseenter)="handleMouseHover(column)">
+                    <div class="grid-button">
+                        <div class="grid-button-content">
+                            {{board[i][j]?.item?.name}}
                         </div>
-                    </button>
+
+                        <div class="grid-button-content">
+                            <div *ngIf="!board[i][j].isEmpty">
+                                <mat-progress-bar mode="determinate" [value]="board[i][j].remainingTimeBarValue"></mat-progress-bar>
+                            </div>
+                        </div>
+                    </div>
                 </mat-grid-tile>
             </div>
         </div>
