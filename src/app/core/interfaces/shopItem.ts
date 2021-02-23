@@ -5,5 +5,5 @@ export interface IShopItem extends IMenuItem {
     heatProduction?: number,
     maxHeat?: number,
     duration?: number,
-    heatRemovePower?: number
+    coolingPower?: number
 }

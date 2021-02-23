@@ -20,7 +20,7 @@ export class MenuService {
       {
         label: 'Shop', contentShop: [
           { id: 0, name: 'Solar Panel', description: 'The most environmental-friendly option you can have! Does not produce any heat to the chamber.', price: 10, moneyProduction: 1, heatProduction: 0, duration: 15 },
-          { id: 1, name: 'Uranium Cell', description: 'A single uranium cell. Produces 5$/s but emits 1 heat/s aswell.', price: 100, moneyProduction: 5, heatProduction: 3, duration: 30 },
+          { id: 1, name: 'Uranium Cell', description: 'A single uranium cell. Produces 5$/s but emits 1 heat/s aswell.', price: 100, moneyProduction: 5, heatProduction: 1, duration: 30 },
           { id: 2, name: 'Plutonium Cell', description: 'Description 1', price: 130 },
           { id: 3, name: 'Thorium Cell', description: 'Description 1', price: 140 },
 
@@ -29,7 +29,7 @@ export class MenuService {
           { id: 6, name: 'Collonium Cell', description: 'Description 1', price: 150 },
           { id: 7, name: 'Anthonium Cell', description: 'Description 1', price: 150 },
 
-          { id: 8, name: 'Simple Fan', description: 'Simple fan that can refrigerate it\'s nearby cells. Keep an eye so it does not overheat!', price: 50, heatRemovePower: 1, maxHeat: 50 },
+          { id: 8, name: 'Simple Fan', description: 'Simple fan that can refrigerate it\'s nearby cells. Keep an eye so it does not overheat! For more information, just google "Only Fans".', price: 50, coolingPower: 2, maxHeat: 50 },
         ]
       },
       {

@@ -86,7 +86,7 @@ export class MainComponent implements OnInit {
         item.item = this._menuService.getSelectedShopItem();
         item.isEmpty = false;
         if (item.item.moneyProduction) this.startLifeCycle(item);
-        else if (item.item.heatRemovePower) this.initRefrigerator(item);
+        else if (item.item.coolingPower) this.initRefrigerator(item);
       }
     }
   }
@@ -110,7 +110,7 @@ export class MainComponent implements OnInit {
   }
 
   generateToolTip(item?: IShopItem) {
-    return item ?
+    if (item?.moneyProduction) return item ?
       `
       ${item.name}
       $${item.moneyProduction}/s
@@ -119,6 +119,15 @@ export class MainComponent implements OnInit {
       Right-click to sell
       `
       : "Error";
+    else if (item?.coolingPower) return item ?
+      `
+      ${item.name}
+      Cools itself by ${item.coolingPower}/s
+
+      Right-click to sell
+      `
+      : "Error";
+    return "Error";
   }
 
   startLifeCycle(square: IBoardSquare) {
@@ -134,7 +143,7 @@ export class MainComponent implements OnInit {
         if (item?.heatProduction) {
           let refrigerators: IBoardSquare[] = [];
           this.board.forEach(row => {
-            refrigerators.push(...row.filter(boardItem => boardItem.item?.heatRemovePower));
+            refrigerators.push(...row.filter(boardItem => boardItem.item?.coolingPower));
           });
 
           refrigerators = refrigerators.filter(boardItem => (
@@ -177,10 +186,10 @@ export class MainComponent implements OnInit {
     let item = square.item ? square.item : undefined;
     square.currentHeat = 0;
     let interval = setInterval(() => {
-      if (item?.maxHeat && item?.heatRemovePower) {
+      if (item?.maxHeat && item?.coolingPower) {
         square.currentHeat = square.currentHeat ?? 0;
 
-        if (square.currentHeat - item?.heatRemovePower > 0) square.currentHeat -= item.heatRemovePower;
+        if (square.currentHeat - item?.coolingPower > 0) square.currentHeat -= item.coolingPower;
         else square.currentHeat = 0;
 
         square.remainingTimeBarValue = square.currentHeat / item.maxHeat * 100;

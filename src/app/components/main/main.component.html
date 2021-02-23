@@ -3,7 +3,7 @@
         <div *ngFor="let row of board; let i = index">
             <div *ngFor="let column of row; let j = index">
                 <mat-grid-tile [id]="'board'+i+j" mat-button [matTooltip]="getTooltip(column)"
-                    (click)="handleClick(column)" (contextmenu)="handleRightClick(column, $event)"
+                    (mousedown)="handleClick(column)" (contextmenu)="handleRightClick(column, $event)"
                     (mouseenter)="handleMouseHover(column)">
                     <div class="grid-button">
                         <div class="grid-button-content" *ngIf="!board[i][j].isEmpty">
@@ -17,7 +17,7 @@
                             </div>
                         </div>
 
-                        <div class="grid-button-content" *ngIf="board[i][j].item?.heatRemovePower">
+                        <div class="grid-button-content" *ngIf="board[i][j].item?.coolingPower">
                             <div>
                                 <mat-progress-bar mode="determinate" [value]="board[i][j].remainingTimeBarValue">
                                 </mat-progress-bar>

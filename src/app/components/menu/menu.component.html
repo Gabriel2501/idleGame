@@ -1,4 +1,4 @@
-<div style="height: 35%;">
+<div style="height: 35%;" class="playerStats">
     <ng-container *ngIf="(asyncStats | async) === null">
         Loading...
     </ng-container>
@@ -14,10 +14,9 @@
             Technology: {{stats.technology}}
         </mat-list-item>
     </mat-list>
-
 </div>
 
-<div style="height: 65%;">
+<div style="height: 65%;" class="tabs">
     <mat-divider></mat-divider>
     <ng-container *ngIf="(asyncTabs | async) === null">
         Loading...

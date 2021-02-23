@@ -11,5 +11,17 @@
 }
 
 .selected {
-    background-color: rgba(0,0,0,0.3);
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.playerStats {
+    background: url("../../../assets/images/stats-bg.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.tabs {
+    background: url("../../../assets/images/tabs-bg.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
 }
