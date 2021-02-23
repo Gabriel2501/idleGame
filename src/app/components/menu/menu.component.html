@@ -30,7 +30,7 @@
 
                 <div *ngIf="tab.contentShop">
                     <div *ngFor="let item of tab.contentShop">
-                        <mat-grid-tile>
+                        <mat-grid-tile *ngIf="item.unlocked">
                             <button [id]="'id' + item.id" class="shopItem" mat-button [matTooltip]="getTooltip(item)"
                                 matTooltipPosition="right" (click)="handleMenuClick(tab.label, item)"
                                 [disabled]="item.disabled">

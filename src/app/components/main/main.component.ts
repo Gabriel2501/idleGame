@@ -76,6 +76,7 @@ export class MainComponent implements OnInit {
   startChamber() {
     setInterval(() => {
       this._playerStatsService.removeHeat(1);
+      this._menuService.updateTabs(this._playerStatsService.getPlayerCurrentStats());
     }, 1000);
   }
 
@@ -84,7 +85,8 @@ export class MainComponent implements OnInit {
       if (this._playerStatsService.buyShopItem(this._menuService.getSelectedShopItem())) {
         item.item = this._menuService.getSelectedShopItem();
         item.isEmpty = false;
-        this.startLifeCycle(item);
+        if (item.item.moneyProduction) this.startLifeCycle(item);
+        else if (item.item.heatRemovePower) this.initRefrigerator(item);
       }
     }
   }
@@ -94,7 +96,7 @@ export class MainComponent implements OnInit {
 
     if (item.item) {
       this._playerStatsService.sellShopItem(item);
-      item.isEmpty = true;
+      this.endLifeCycle(item);
     }
   }
 
@@ -129,7 +131,32 @@ export class MainComponent implements OnInit {
         square.remainingTime--;
         square.remainingTimeBarValue = item?.duration ? square.remainingTime / item.duration * 100 : 0;
         this._playerStatsService.addMoney(item?.moneyProduction);
-        if (this._playerStatsService.addHeat(item?.heatProduction)) this.explodeChamber();
+        if (item?.heatProduction) {
+          let refrigerators: IBoardSquare[] = [];
+          this.board.forEach(row => {
+            refrigerators.push(...row.filter(boardItem => boardItem.item?.heatRemovePower));
+          });
+
+          refrigerators = refrigerators.filter(boardItem => (
+            (
+              (boardItem.positionX - 1 == square.positionX || boardItem.positionX + 1 == square.positionX)
+              &&
+              (boardItem.positionY == square.positionY)
+            )
+            ||
+            (
+              (boardItem.positionY - 1 == square.positionY || boardItem.positionY + 1 == square.positionY)
+              &&
+              (boardItem.positionX == square.positionX)
+            )
+          ));
+          if (refrigerators.length) {
+            refrigerators.forEach(refrigerator => (refrigerator.currentHeat != undefined && item?.heatProduction) ? refrigerator.currentHeat += item?.heatProduction / refrigerators.length : undefined);
+          }
+          else {
+            if (this._playerStatsService.addHeat(item?.heatProduction)) this.explodeChamber();
+          }
+        }
       }
       if (square.isEmpty || !square.remainingTime) {
         setTimeout(() => {
@@ -144,6 +171,31 @@ export class MainComponent implements OnInit {
     document.querySelector(`#board${square.positionX}${square.positionY}`)?.classList.remove("activated");
     square.isEmpty = true;
     square.item = undefined;
+  }
+
+  initRefrigerator(square: IBoardSquare) {
+    let item = square.item ? square.item : undefined;
+    square.currentHeat = 0;
+    let interval = setInterval(() => {
+      if (item?.maxHeat && item?.heatRemovePower) {
+        square.currentHeat = square.currentHeat ?? 0;
+
+        if (square.currentHeat - item?.heatRemovePower > 0) square.currentHeat -= item.heatRemovePower;
+        else square.currentHeat = 0;
+
+        square.remainingTimeBarValue = square.currentHeat / item.maxHeat * 100;
+        if (square.currentHeat > item?.maxHeat) {
+          this.endLifeCycle(square);
+          clearInterval(interval);
+        }
+      }
+      if (square.isEmpty) {
+        setTimeout(() => {
+          this.endLifeCycle(square);
+          clearInterval(interval);
+        }, 200);
+      }
+    }, 1000);
   }
 
   explodeChamber() {

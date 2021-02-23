@@ -3,6 +3,6 @@ export interface IMenuItem {
     name: string,
     description: string,
     price: number,
-    disabled?: boolean
-    
+    disabled?: boolean,
+    unlocked?: boolean
 }

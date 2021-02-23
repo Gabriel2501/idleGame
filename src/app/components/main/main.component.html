@@ -6,13 +6,22 @@
                     (click)="handleClick(column)" (contextmenu)="handleRightClick(column, $event)"
                     (mouseenter)="handleMouseHover(column)">
                     <div class="grid-button">
-                        <div class="grid-button-content">
+                        <div class="grid-button-content" *ngIf="!board[i][j].isEmpty">
                             {{board[i][j]?.item?.name}}
                         </div>
 
-                        <div class="grid-button-content">
-                            <div *ngIf="!board[i][j].isEmpty">
-                                <mat-progress-bar mode="determinate" [value]="board[i][j].remainingTimeBarValue"></mat-progress-bar>
+                        <div class="grid-button-content" *ngIf="board[i][j].item?.moneyProduction">
+                            <div>
+                                <mat-progress-bar mode="determinate" [value]="board[i][j].remainingTimeBarValue">
+                                </mat-progress-bar>
+                            </div>
+                        </div>
+
+                        <div class="grid-button-content" *ngIf="board[i][j].item?.heatRemovePower">
+                            <div>
+                                <mat-progress-bar mode="determinate" [value]="board[i][j].remainingTimeBarValue">
+                                </mat-progress-bar>
+                                {{board[i][j]?.currentHeat}} / {{board[i][j]?.item?.maxHeat}}
                             </div>
                         </div>
                     </div>
