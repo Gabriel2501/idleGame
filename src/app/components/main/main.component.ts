@@ -206,6 +206,7 @@ export class MainComponent implements OnInit {
 
         square.remainingTimeBarValue = square.currentHeat / item.maxHeat * 100;
         if (square.currentHeat > item?.maxHeat) {
+          this.explodeOnSquare(square);
           this.endLifeCycle(square);
           clearInterval(interval);
         }
