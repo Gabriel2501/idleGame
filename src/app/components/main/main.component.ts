@@ -66,7 +66,6 @@ export class MainComponent implements OnInit {
     });
 
     this.startChamber();
-
   }
 
   ngOnInit(): void {
@@ -74,9 +73,22 @@ export class MainComponent implements OnInit {
   }
 
   startChamber() {
+    let previousBalance = this._playerStatsService.getPlayerCurrentStats().balance;
+    let seconds = 0;
     setInterval(() => {
+      let currentBalance = this._playerStatsService.getPlayerCurrentStats().balance;
+      if (currentBalance < 10 && currentBalance === previousBalance) {
+        seconds++;
+        if (seconds >= 5) {
+          this._playerStatsService.addMoney(10 - currentBalance);
+        }
+      }
+      else {
+        seconds = 0;
+      }
       this._playerStatsService.removeHeat(1);
       this._menuService.updateTabs(this._playerStatsService.getPlayerCurrentStats());
+      previousBalance = currentBalance;
     }, 1000);
   }
 
@@ -208,7 +220,20 @@ export class MainComponent implements OnInit {
   }
 
   explodeChamber() {
-    this.board.forEach(row => row.forEach(square => square.isEmpty = true));
+    this.board.forEach(row => row.forEach(square => {
+      this.explodeOnSquare(square);
+      this.endLifeCycle(square);
+    }));
+  }
+
+  explodeOnSquare(square: IBoardSquare) {
+    if (square.item) {
+      let element = <HTMLImageElement>document.querySelector(`#explosion${square.positionX}${square.positionY}`);
+      element.style.display = "block";
+      setTimeout(() => {
+        element.style.display = "none";
+      }, 1000);
+    }
   }
 
 }
