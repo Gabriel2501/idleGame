@@ -1,0 +1,38 @@
+<div class="dialog-container">
+    <h1 mat-dialog-title>Help</h1>
+    <div mat-dialog-content>
+        <mat-tab-group mat-align-tabs="center" [selectedIndex]="selected.value">
+            <mat-tab label="Getting Started">
+                <div class="tab-container">
+                    a
+                    <div class="button-list">
+                        <button (click)="changeTab(0)" mat-raised-button disabled><</button>
+                        <button mat-raised-button mat-dialog-close color="primary">Got it!</button>
+                        <button (click)="changeTab(1)" mat-raised-button>></button>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="Heat Production">
+                <div class="tab-container">
+                    a
+                    <div class="button-list">
+                        <button (click)="changeTab(0)" mat-raised-button><</button>
+                        <button mat-raised-button mat-dialog-close color="primary">Got it!</button>
+                        <button (click)="changeTab(2)" mat-raised-button>></button>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="Cooling Power">
+                <div class="tab-container">
+                    a
+                    <div class="button-list">
+                        <button (click)="changeTab(1)" mat-raised-button><</button>
+                        <button mat-raised-button mat-dialog-close color="primary">Got it!</button>
+                        <button (click)="changeTab(3)" mat-raised-button disabled>></button>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+
+</div>

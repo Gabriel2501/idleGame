@@ -8,13 +8,15 @@ import { MainComponent } from './components/main/main.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
+import { HelpComponent } from './components/help/help.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     MainComponent,
-    MenuComponent
+    MenuComponent,
+    HelpComponent
   ],
   imports: [
     BrowserModule,
