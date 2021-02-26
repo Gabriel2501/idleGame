@@ -25,7 +25,7 @@ export class PlayerStatsService {
     this._playerStats = {
       balance: 10,
       technology: 0,
-      size: 5,
+      size: 10,
       currentHeat: 0,
       maxHeat: 100
     };
