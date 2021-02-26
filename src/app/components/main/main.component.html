@@ -6,7 +6,8 @@
                     (mousedown)="handleClick(column)" (contextmenu)="handleRightClick(column, $event)"
                     (mouseenter)="handleMouseHover(column)">
                     <div class="grid-button">
-                        <img [id]="'explosion'+i+j" src="../../../assets/animations/explosion.gif" style="display: none;width: 100%;height: 100%;"/>
+                        <img [id]="'explosion'+i+j" src="../../../assets/animations/explosion.gif"
+                            style="display: none;width: 100%;height: 100%;" />
                         <div class="grid-button-content" *ngIf="!board[i][j].isEmpty">
                             {{board[i][j]?.item?.name}}
                         </div>
