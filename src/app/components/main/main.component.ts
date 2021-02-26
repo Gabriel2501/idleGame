@@ -93,7 +93,7 @@ export class MainComponent implements OnInit {
   }
 
   handleClick(item: IBoardSquare) {
-    if (!item.item) {
+    if (!item.item && this._menuService.getSelectedShopItem()) {
       if (this._playerStatsService.buyShopItem(this._menuService.getSelectedShopItem())) {
         item.item = this._menuService.getSelectedShopItem();
         item.isEmpty = false;
@@ -145,7 +145,6 @@ export class MainComponent implements OnInit {
   startLifeCycle(square: IBoardSquare) {
     let item = square.item ? square.item : undefined;
     square.remainingTime = item?.duration ? item.duration : 0;
-    document.querySelector(`#board${square.positionX}${square.positionY}`)?.classList.add("activated");
     square.remainingTimeBarValue = 100;
     let interval = setInterval(() => {
       if (!square.isEmpty && square.remainingTime) {
@@ -189,7 +188,6 @@ export class MainComponent implements OnInit {
   }
 
   endLifeCycle(square: IBoardSquare) {
-    document.querySelector(`#board${square.positionX}${square.positionY}`)?.classList.remove("activated");
     square.isEmpty = true;
     square.item = undefined;
   }
